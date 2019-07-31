@@ -1,12 +1,27 @@
 import React, { Component } from 'react';
 import './css/pure-min.css';
 import './css/side-menu.css';
+import $ from 'jquery';
 
 class App extends Component {
   constructor(){
 
     super();
-    this.state = {lista: [{nome: 'Felipe', email: 'pereira_felipesilva@outlook.com', senha: '123456'}]};
+    this.state = {lista: []};
+  }
+
+  componentDidMount(){
+
+    $.ajax({
+      method: "GET",
+      url: "http://cdc-react.herokuapp.com/api/autores",
+      dataType: "JSON",
+      success:function(resposta){
+
+        this.setState({lista: resposta})
+      }.bind(this),
+      error:()=>{console.log("Não foi possível recuperar os dados do servidor")}
+    })
   }
 
   render(){
@@ -68,7 +83,7 @@ class App extends Component {
                     this.state.lista.map(function(autor){
                       return (
 
-                        <tr>
+                        <tr key={autor.id}>
                           <td>{autor.nome}</td>
                           <td>{autor.email}</td>
                         </tr>
