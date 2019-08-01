@@ -24,6 +24,26 @@ class App extends Component {
     })
   }
 
+  enviaForm(event){
+
+    event.preventDefault();
+    console.log('clicado');
+    $.ajax({
+
+      method: "POST",
+      url: "http://cdc-react.herokuapp.com/api/autores",
+      contentType: "application/json",
+      data: JSON.stringify({ nome:"", email:"", senha: "" }),
+      dataType: "json",
+      success: function(resposta){
+        console.log(`Sucesso: ${resposta}`);
+      },
+      error: function(resposta){
+        console.log(`Falha na requisição: ${resposta}`);
+      }
+    })
+  }
+
   render(){
 
     return (
@@ -34,12 +54,12 @@ class App extends Component {
   
         <div id="menu">
           <div className="pure-menu">
-            <a className="pure-menu-heading" href="#">Company</a>
+            <a className="pure-menu-heading" href="#menu">Company</a>
   
             <ul className="pure-menu-list">
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Home</a></li>
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Autor</a></li>
-              <li className="pure-menu-item"><a href="#" className="pure-menu-link">Livros</a></li>
+              <li className="pure-menu-item"><a href="#menu" className="pure-menu-link">Home</a></li>
+              <li className="pure-menu-item"><a href="#menu" className="pure-menu-link">Autor</a></li>
+              <li className="pure-menu-item"><a href="#menu" className="pure-menu-link">Livros</a></li>
             </ul>
           </div>
         </div>
@@ -50,14 +70,14 @@ class App extends Component {
           </div>
           <div className="content" id="content">
             <div className="pure-form pure-form-aligned">
-              <form className="pure-form pure-form-aligned">
+              <form className="pure-form pure-form-aligned" onSubmit={this.enviaForm}>
                 <div className="pure-control-group">
                   <label htmlFor="nome">Nome</label>
-                  <input id="nome" type="text" name="nome" value=""  />   
+                  <input id="nome" type="text" name="nome" defaultValue=""  />   
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="email">Email</label>
-                  <input id="email" type="email" name="email" value=""  />    
+                  <input id="email" type="email" name="email" defaultValue=""  />    
                 </div>
                 <div className="pure-control-group">
                   <label htmlFor="senha">Senha</label>
