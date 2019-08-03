@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import $ from 'jquery';
+import PubSub from 'pubsub-js';
 import InputForm from './Components/InputForm';
 import SubmitButton from './Components/SubmitButton';
 
@@ -40,8 +41,8 @@ class FormularioAutores extends Component {
       contentType: "application/json",
       data: JSON.stringify({ nome: this.state.nome, email: this.state.email, senha: this.state.senha }),
       dataType: "json",
-      success: (resposta)=> {
-        this.props.callbackAtualiza(resposta);
+      success: (novaListagem)=> {
+        PubSub.publish('atualiza-lista-autores', novaListagem);
         console.log(`Dados enviados com sucesso!`);
       },
       error: erro => {
@@ -104,7 +105,6 @@ export default class AutorBox extends Component {
     
     super();
     this.state = {lista: []};
-    this.atualizaListagem = this.atualizaListagem.bind(this);
   }
   
   componentDidMount(){
@@ -119,18 +119,17 @@ export default class AutorBox extends Component {
       }.bind(this),
       error: ()=> {console.log("Não foi possível recuperar os dados do servidor")}
     })
-  }
 
-  atualizaListagem(novaLista){
-    
-    this.setState({lista: novaLista});
+    PubSub.subscribe('atualiza-lista-autores', function(topico,novaListagem){
+      this.setState({lista:novaListagem});
+    }.bind(this));
   }
 
   render(){
     
     return(
       <>
-        <FormularioAutores callbackAtualiza={this.atualizaListagem} />
+        <FormularioAutores />
         <TabelaAutores lista={this.state.lista} />
       </>
     );
