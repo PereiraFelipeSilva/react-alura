@@ -3,6 +3,7 @@ import $ from 'jquery';
 import PubSub from 'pubsub-js';
 import InputForm from './Components/InputForm';
 import SubmitButton from './Components/SubmitButton';
+import ErrorHandler from './ErrorHandler';
 
 class FormularioAutores extends Component {
 
@@ -41,13 +42,19 @@ class FormularioAutores extends Component {
       contentType: "application/json",
       data: JSON.stringify({ nome: this.state.nome, email: this.state.email, senha: this.state.senha }),
       dataType: "json",
-      success: (novaListagem)=> {
+      success: (novaListagem) => {
         PubSub.publish('atualiza-lista-autores', novaListagem);
+        this.setState({ nome:'', email: '', senha: '' });
         console.log(`Dados enviados com sucesso!`);
       },
-      error: erro => {
-        console.log(`Não foi possível enviar os dados para o servidor.`);
-        throw new Error(erro);
+      error: resposta => {
+        if(resposta.status === 400){
+          new ErrorHandler().displayError(resposta.responseJSON);
+        }
+      },
+      beforeSend: ()=> {
+
+        PubSub.publish('limpa-erros', {});
       }
     })
   }
