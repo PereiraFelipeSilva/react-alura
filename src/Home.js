@@ -1,16 +1,16 @@
-import React,{Component} from 'react';
+import React, { Component } from 'react';
 
 export default class Home extends Component {
-	render(){
+	render() {
 		return (
-	      <div>		
-	          <div className="header">
-	            <h1>Bem vindo ao sistema</h1>
-	          </div>
-	          <div className="content" id="content">                              
-	          </div>
-	      </div>
+			<div>
+				<div className="header">
+					<h1>Bem vindo ao sistema</h1>
+				</div>
+				<div className="content" id="content">
+				</div>
+			</div>
 
-		);		
+		);
 	}
 }

@@ -1,36 +1,36 @@
-import React, { Component } from 'react'; 
+import React, { Component } from 'react';
 import PubSub from 'pubsub-js';
 
 class InputForm extends Component {
 
-  constructor(){
+  constructor() {
 
     super();
     this.state = { msgErro: '' }
   }
 
-  render(){
+  render() {
 
-    return(
+    return (
 
       <div className="pure-control-group">
         <label htmlFor={this.props.id}> {this.props.label} </label>
-        <input {...this.props}/>
+        <input {...this.props} />
         <span className="error"> {this.state.msgErro} </span>
       </div>
     );
   }
 
-  componentDidMount(){
+  componentDidMount() {
 
-    PubSub.subscribe('Erro-de-Validacao', (topico, erro)=> {
+    PubSub.subscribe('Erro-de-Validacao', (topico, erro) => {
 
-      if(erro.field === this.props.name)
+      if (erro.field === this.props.name)
         this.setState({ msgErro: erro.defaultMessage })
     });
 
     PubSub.subscribe('limpa-erros', topico => {
-      
+
       this.setState({ msgErro: '' })
     })
   }

@@ -4,16 +4,16 @@ import App from './App';
 import AutorBox from './Autor';
 import LivroAdmin from './Livro';
 import Home from './Home';
-import {BrowserRouter as Router, Route,Switch,Link} from 'react-router-dom';
+import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
 ReactDOM.render((
 	<Router>
 		<App>
-			<Switch>            
-				<Route exact path="/" component={Home}/>
-				<Route path="/autor" component={AutorBox}/>
-				<Route path="/livro" component={LivroAdmin}/>                
-			</Switch>            
+			<Switch>
+				<Route exact path="/" component={Home} />
+				<Route path="/autor" component={AutorBox} />
+				<Route path="/livro" component={LivroAdmin} />
+			</Switch>
 		</App>
 	</Router>
 

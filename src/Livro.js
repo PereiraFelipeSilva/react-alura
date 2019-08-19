@@ -7,23 +7,23 @@ import ErrorHandler from './ErrorHandler';
 class FormularioLivro extends Component {
   constructor(props) {
     super(props);
-    this.state = {titulo: '', preco: '', autorId: ''};
+    this.state = { titulo: '', preco: '', autorId: '' };
     this.setTitulo = this.setTitulo.bind(this);
     this.setPreco = this.setPreco.bind(this);
-    this.setAutorId = this.setAutorId.bind(this);   
+    this.setAutorId = this.setAutorId.bind(this);
     this.handleLivroSubmit = this.handleLivroSubmit.bind(this);
   }
 
   setTitulo(e) {
-    this.setState({titulo: e.target.value});
+    this.setState({ titulo: e.target.value });
   }
 
   setPreco(e) {
-    this.setState({preco: e.target.value});
+    this.setState({ preco: e.target.value });
   }
 
   setAutorId(e) {
-    this.setState({autorId: e.target.value});
+    this.setState({ autorId: e.target.value });
   }
 
 
@@ -38,26 +38,26 @@ class FormularioLivro extends Component {
       contentType: 'application/json',
       dataType: 'json',
       type: 'POST',
-      data: JSON.stringify({titulo:titulo,preco:preco,autorId:autorId}),
-      success: function(novaListagem) {
-          PubSub.publish( 'atualiza-lista-livros',novaListagem);            
-          this.setState({titulo:'',preco:'',autorId:''});
+      data: JSON.stringify({ titulo: titulo, preco: preco, autorId: autorId }),
+      success: function (novaListagem) {
+        PubSub.publish('atualiza-lista-livros', novaListagem);
+        this.setState({ titulo: '', preco: '', autorId: '' });
       },
-      error: function(resposta){
-        if(resposta.status === 400){
+      error: function (resposta) {
+        if (resposta.status === 400) {
           new ErrorHandler().displayError(resposta.responseJSON);
         }
       },
-      beforeSend: function(){
-        PubSub.publish("limpa-erros",{});
-      }            
-    });  
+      beforeSend: function () {
+        PubSub.publish("limpa-erros", {});
+      }
+    });
 
-    this.setState({titulo: '', preco: '', autorId: ''});
+    this.setState({ titulo: '', preco: '', autorId: '' });
   }
 
   render() {
-    var autores = this.props.autores.map(function(autor){
+    var autores = this.props.autores.map(function (autor) {
       return <option key={autor.id} value={autor.id}>{autor.nome}</option>;
     });
     return (
@@ -71,29 +71,29 @@ class FormularioLivro extends Component {
               {autores}
             </select>
           </div>
-          <div className="pure-control-group">                                  
-            <label></label> 
-            <button type="submit" className="pure-button pure-button-primary">Gravar</button>                                    
-          </div>          
-        </form>             
+          <div className="pure-control-group">
+            <label></label>
+            <button type="submit" className="pure-button pure-button-primary">Gravar</button>
+          </div>
+        </form>
       </div>
     );
   }
-} 
+}
 
 class TabelaLivros extends Component {
 
   render() {
-    var livros = this.props.lista.map(function(livro){
-      return(
-          <tr key={livro.titulo}>
-            <td>{livro.titulo}</td>
-            <td>{livro.autor.nome}</td>
-            <td>{livro.preco}</td>
-          </tr>
-        );
-      });
-    return(
+    var livros = this.props.lista.map(function (livro) {
+      return (
+        <tr key={livro.titulo}>
+          <td>{livro.titulo}</td>
+          <td>{livro.autor.nome}</td>
+          <td>{livro.preco}</td>
+        </tr>
+      );
+    });
+    return (
       <table className="pure-table">
         <thead>
           <tr>
@@ -113,40 +113,40 @@ class TabelaLivros extends Component {
 export default class LivroAdmin extends Component {
   constructor(props) {
     super(props);
-    this.state = {lista : [],autores:[]};
+    this.state = { lista: [], autores: [] };
   }
 
   componentDidMount() {
     $.ajax({
       url: "https://cdc-react.herokuapp.com/api/livros",
       dataType: 'json',
-      success: function(data) {
-        this.setState({lista: data});
+      success: function (data) {
+        this.setState({ lista: data });
       }.bind(this)
     });
 
     $.ajax({
       url: "https://cdc-react.herokuapp.com/api/livros",
       dataType: 'json',
-      success: function(data) {
-        this.setState({autores: data});
+      success: function (data) {
+        this.setState({ autores: data });
       }.bind(this)
     });
 
-    PubSub.subscribe('atualiza-lista-livros', function(topicName,lista){
-      this.setState({lista:lista});
-    }.bind(this));    
+    PubSub.subscribe('atualiza-lista-livros', function (topicName, lista) {
+      this.setState({ lista: lista });
+    }.bind(this));
   }
 
   render() {
-    return(
+    return (
       <div>
         <div className="header">
           <h1>Cadastro de Livros</h1>
         </div>
         <div className="content" id="content">
-          <FormularioLivro autores={this.state.autores}/>
-          <TabelaLivros lista={this.state.lista}/>
+          <FormularioLivro autores={this.state.autores} />
+          <TabelaLivros lista={this.state.lista} />
         </div>
       </div>
     );
